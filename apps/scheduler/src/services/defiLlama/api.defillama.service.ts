@@ -5,6 +5,10 @@ import {
   DexInfoRepository,
   DexProtocol,
   DexProtocolRepository,
+  FeeInfo,
+  FeeInfoRepository,
+  FeeProtocol,
+  FeeProtocolRepository,
   Protocol,
   ProtocolRepository,
   StableCoin,
@@ -19,6 +23,8 @@ import {
   ChainResponse,
   DexInfoResponse,
   DexProtocolResponse,
+  FeeInfoResponse,
+  FeeProtocolResponse,
   ProtocolResponse,
   StableCoinResponse,
   YieldPoolResponse,
@@ -36,6 +42,8 @@ export class ApiDefiLlamaService {
     private readonly yieldPoolRepository: YieldPoolRepository,
     private readonly dexInfoRepository: DexInfoRepository,
     private readonly dexProtocolRepository: DexProtocolRepository,
+    private readonly feeInfoRepository: FeeInfoRepository,
+    private readonly feeProtocolRepository: FeeProtocolRepository,
     private readonly dataSource: DataSource,
   ) {
     const baseUrl = 'https://api.llama.fi';
@@ -132,6 +140,46 @@ export class ApiDefiLlamaService {
       this.logger.error(
         `[${this.getDexInfo.name}] DexInfo, DexProtocol DB Insert 실패 :\nmessage: ${error}  `,
       );
+    } finally {
+      await queryRunner.release();
+    }
+  }
+
+  public async getFeeInfo(chainName: string) {
+    const endpoint = `/overview/fees/${chainName}`;
+
+    const getFeeInfoResponse = await this.defiLlamaApiInstance.get(endpoint, {
+      params: {
+        excludeTotalDataChart: true,
+        excludeTotalDataChartBreakdown: true,
+      },
+    });
+
+    const feeInfoResponse: FeeInfoResponse = getFeeInfoResponse.data;
+    const feeProtocols = feeInfoResponse.protocols;
+
+    // DB Transaction For Fee DB
+    const queryRunner = await this.dataSource.createQueryRunner();
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
+    this.logger.debug(`[${this.getFeeInfo.name}] DB Transaction 생성.`);
+    try {
+      //
+      const chain = await this.chainRepository.findByName(feeInfoResponse.chain);
+      const feeInfo = await this.saveFeeInfo(feeInfoResponse, chain, queryRunner.manager);
+      const feeProtocolInfo = await this.saveFeeProtocols(
+        feeProtocols,
+        feeInfo,
+        queryRunner.manager,
+      );
+      this.logger.debug(`Successfully saved ${feeProtocols.length} feeProtocols to database`);
+      await queryRunner.commitTransaction();
+      this.logger.debug(`[${this.getFeeInfo.name}] DB Transaction 커밋. `);
+      return { feeInfo, feeProtocolInfo };
+    } catch (error) {
+      await queryRunner.rollbackTransaction();
+      this.logger.debug(`[${this.getFeeInfo.name}] DB Transaction rollback. `);
+      this.logger.error(`[${this.getFeeInfo.name}]  DB Insert 실패 :\nmessage: ${error}  `);
     } finally {
       await queryRunner.release();
     }
@@ -356,6 +404,84 @@ export class ApiDefiLlamaService {
     return await this.dexProtocolRepository.saveMany(dexProtocolEntities, entityManager);
   }
 
+  /**
+   * FeeInfo 데이터를 가져와서 DB에 저장합니다.
+   */
+  public async saveFeeInfo(feeInfo: FeeInfoResponse, chain: Chain, entityManager?: EntityManager) {
+    const feeInfoEntity: FeeInfo = {
+      allChains: feeInfo.allChains,
+      total24h: feeInfo.total24h,
+      total48hto24h: feeInfo.total48hto24h,
+      total7d: feeInfo.total7d,
+      total14dto7d: feeInfo.total14dto7d,
+      total60dto30d: feeInfo.total60dto30d,
+      total30d: feeInfo.total30d,
+      total1y: feeInfo.total1y,
+      totalAllTime: feeInfo.totalAllTime,
+      change_1d: feeInfo.change_1d,
+      change_7d: feeInfo.change_7d,
+      change_1m: feeInfo.change_1m,
+      change_7dover7d: feeInfo.change_7dover7d,
+      change_30dover30d: feeInfo.change_30dover30d,
+      total7DaysAgo: feeInfo.total7DaysAgo,
+      total30DaysAgo: feeInfo.total30DaysAgo,
+      breakdown24h: feeInfo.breakdown24h,
+      breakdown30d: feeInfo.breakdown30d,
+      chain,
+    };
+    return await this.feeInfoRepository.saveOrUpdate(feeInfoEntity, entityManager);
+  }
+
+  /**
+   * FeeProtocol 데이터를 가져와서 DB에 저장합니다.
+   */
+
+  public async saveFeeProtocols(
+    feeProtocols: FeeProtocolResponse[],
+    feeInfo: FeeInfo,
+    entityManager?: EntityManager,
+  ) {
+    const feeProtocolEntities: FeeProtocol[] = feeProtocols.map(
+      (feeProtocol): FeeProtocol => ({
+        feeInfo: feeInfo,
+        defillamaId: feeProtocol.defillamaId,
+        name: feeProtocol.name,
+        displayName: feeProtocol.displayName,
+        module: feeProtocol.module,
+        category: feeProtocol.category,
+        logo: feeProtocol.logo,
+        chains: feeProtocol.chains,
+        protocolType: feeProtocol.protocolType,
+        methodologyURL: feeProtocol.methodologyURL,
+        methodology: feeProtocol.methodology,
+        parentProtocol: feeProtocol.parentProtocol,
+        slug: feeProtocol.slug,
+        linkedProtocols: feeProtocol.linkedProtocols,
+        id: feeProtocol.id,
+        total24h: feeProtocol.total24h,
+        total48hto24h: feeProtocol.total48hto24h,
+        total7d: feeProtocol.total7d,
+        total14dto7d: feeProtocol.total14dto7d,
+        total60dto30d: feeProtocol.total60dto30d,
+        total30d: feeProtocol.total30d,
+        total1y: feeProtocol.total1y,
+        totalAllTime: feeProtocol.totalAllTime,
+        average1y: feeProtocol.average1y,
+        monthlyAverage1y: feeProtocol.monthlyAverage1y,
+        change_1d: feeProtocol.change_1d,
+        change_7d: feeProtocol.change_7d,
+        change_1m: feeProtocol.change_1m,
+        change_7dover7d: feeProtocol.change_7dover7d,
+        change_30dover30d: feeProtocol.change_30dover30d,
+        total7DaysAgo: feeProtocol.total7DaysAgo,
+        total30DaysAgo: feeProtocol.total30DaysAgo,
+      }),
+    );
+
+    // Repository의 saveMany 메서드 사용
+    return await this.feeProtocolRepository.saveMany(feeProtocolEntities, entityManager);
+  }
+
   // call by scheduler
   public async queryDefiLlamaApiForBaseMainnet() {
     const chains = await this.getAllChains();
@@ -386,5 +512,7 @@ export class ApiDefiLlamaService {
     await this.saveYieldPools(baseYieldPools);
 
     await this.getDexInfo(baseMainnet.name);
+
+    await this.getFeeInfo(baseMainnet.name);
   }
 }

@@ -140,3 +140,67 @@ export interface DexInfoResponse {
   totalAllTime: string;
   protocols: DexProtocolResponse[];
 }
+
+export interface FeeProtocolResponse {
+  total24h: string;
+  total48hto24h: string;
+  total7d: string;
+  total14dto7d: string;
+  total60dto30d: string;
+  total30d: string;
+  total1y: string;
+  totalAllTime: string;
+  average1y: number;
+  monthlyAverage1y: number;
+  change_1d: number;
+  change_7d: number;
+  change_1m: number;
+  change_7dover7d: number;
+  change_30dover30d: number;
+  total7DaysAgo: number;
+  total30DaysAgo: number;
+  defillamaId: string;
+  name: string;
+  displayName: string;
+  module: string;
+  category: string;
+  logo: string;
+  chains: string[];
+  protocolType: string;
+  methodologyURL: string;
+  methodology: {
+    UserFees: string;
+    Fees: string;
+    Revenue: string;
+    ProtocolRevenue: string;
+    HoldersRevenue: string;
+    SupplySideRevenue: string;
+  };
+  parentProtocol: string;
+  slug: string;
+  linkedProtocols: string[];
+  id: string;
+}
+
+export interface FeeInfoResponse {
+  breakdown24h: any;
+  breakdown30d: any;
+  chain: string;
+  allChains: string[];
+  total24h: string;
+  total48hto24h: string;
+  total7d: string;
+  total14dto7d: string;
+  total60dto30d: string;
+  total30d: string;
+  total1y: string;
+  change_1d: number;
+  change_7d: number;
+  change_1m: number;
+  change_7dover7d: number;
+  change_30dover30d: number;
+  total7DaysAgo: string;
+  total30DaysAgo: string;
+  totalAllTime: string;
+  protocols: FeeProtocolResponse[];
+}

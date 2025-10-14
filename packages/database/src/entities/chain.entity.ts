@@ -7,6 +7,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { DexInfo } from './dexinfo.entity';
+import { FeeInfo } from './feeinfo.entity';
 
 @Entity('chains')
 export class Chain {
@@ -42,4 +43,7 @@ export class Chain {
   // Relation
   @OneToOne(() => DexInfo, { nullable: true })
   dexInfo?: DexInfo;
+
+  @OneToOne(() => FeeInfo, { nullable: true })
+  feeInfo?: FeeInfo;
 }
