@@ -1,0 +1,14 @@
+{
+  "name": "@lumina-backend/redis",
+  "version": "1.0.0",
+  "main": "src/index.js",
+  "types": "src/index.d.ts",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "build": "tsc"
+  },
+  "dependencies": {
+    "ioredis": "^5.4.1"
+  }
+}

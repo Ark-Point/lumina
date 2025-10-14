@@ -1,0 +1,24 @@
+version: '3.8'
+services:
+  lumina-postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: devArkpoint
+      POSTGRES_PASSWORD: 4JlQUcyrNHu8
+      POSTGRES_DB: lumina
+    ports:
+      - '5432:5432'
+    volumes:
+      - luminapgdata:/var/lib/postgresql/luminapgdata/data
+  lumina-redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    ports:
+      - '6379:6379'
+    command: ['redis-server', '--appendonly', 'yes']
+    volumes:
+      - luminaredisdata:/luminaredisdata/data
+volumes:
+  luminapgdata:
+  luminaredisdata:

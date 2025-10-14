@@ -1,0 +1,55 @@
+# --- OS / Editor ---
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.iml
+
+# --- Logs ---
+logs/
+*.log
+*.log.*
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# --- Environment files ---
+.env
+.env.*
+env.*
+!.env.example
+!env.example
+
+# --- Node / TypeScript ---
+node_modules/
+*.tsbuildinfo
+
+# --- Build outputs ---
+dist/
+build/
+.cache/
+.tmp/
+tmp/
+out/
+
+# --- Monorepo packages ---
+packages/**/dist/
+apps/**/dist/
+
+# --- Coverage ---
+coverage/
+.nyc_output/
+
+# --- Turbo / Caches ---
+.turbo/
+.turbo-cache/
+
+# --- Hardhat (EVM contracts) ---
+packages/evm-contracts/cache/
+packages/evm-contracts/artifacts/
+packages/evm-contracts/typechain-types/
+artifacts/
+cache/
+
+

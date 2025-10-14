@@ -1,0 +1,9 @@
+{
+  "extends": "../../tsconfig.json", // 프로젝트 루트 설정을 상속
+  "compilerOptions": {
+    "outDir": "dist", // 컴파일 결과물을 dist 폴더에 생성
+    "types": ["node"]
+  },
+  "include": ["src/**/*"], // src 폴더 안의 모든 ts 파일을 컴파일
+  "exclude": ["node_modules", "dist"]
+}

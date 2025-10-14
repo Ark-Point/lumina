@@ -1,0 +1,27 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "declaration": true,
+    "removeComments": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "allowSyntheticDefaultImports": true,
+    "target": "ES2021",
+    "sourceMap": true,
+    "outDir": "./dist",
+    "baseUrl": "./",
+    "incremental": true,
+    "skipLibCheck": true,
+    "strictNullChecks": false,
+    "noImplicitAny": false,
+    "strictBindCallApply": false,
+    "forceConsistentCasingInFileNames": false,
+    "noFallthroughCasesInSwitch": false,
+    "paths": {
+      // "@nestjs/*" 모듈을 찾을 때, 현재 프로젝트의 node_modules에서 찾도록 지시
+      "@nestjs/*": ["node_modules/@nestjs/*"]
+    }
+  },
+  "exclude": ["node_modules", "dist"], // node_modules와 dist 폴더는 제외
+  "include": ["**/*", "ormconfig.ts"] // 모든 파일을 포함
+}
