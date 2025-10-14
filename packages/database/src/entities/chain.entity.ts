@@ -8,6 +8,7 @@ import {
 } from 'typeorm';
 import { DexInfo } from './dexinfo.entity';
 import { FeeInfo } from './feeinfo.entity';
+import { PerpInfo } from './perpinfo.entity';
 
 @Entity('chains')
 export class Chain {
@@ -22,10 +23,10 @@ export class Chain {
   })
   tvl: number;
 
-  @Column({ type: 'varchar', length: 50, nullable: true })
+  @Column({ type: 'varchar', length: 255, nullable: true })
   tokenSymbol: string;
 
-  @Column({ type: 'varchar', length: 50, nullable: true })
+  @Column({ type: 'varchar', length: 255, nullable: true })
   cmcId: string;
 
   @Column({ type: 'varchar', length: 255 })
@@ -46,4 +47,7 @@ export class Chain {
 
   @OneToOne(() => FeeInfo, { nullable: true })
   feeInfo?: FeeInfo;
+
+  @OneToOne(() => PerpInfo, { nullable: true })
+  perpInfo?: PerpInfo;
 }

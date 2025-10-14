@@ -1,13 +1,24 @@
 import '@lumina-backend/config';
 import { DynamicModule, Global, Module } from '@nestjs/common';
 import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
-import { Chain, DexInfo, DexProtocol, Protocol, StableCoin, YieldPool } from './entities';
+import {
+  Chain,
+  DexInfo,
+  DexProtocol,
+  PerpInfo,
+  PerpProtocol,
+  Protocol,
+  StableCoin,
+  YieldPool,
+} from './entities';
 import { FeeInfo } from './entities/feeinfo.entity';
 import { FeeProtocol } from './entities/feeprotocol.entity';
 import {
   ChainRepository,
   DexInfoRepository,
   DexProtocolRepository,
+  PerpInfoRepository,
+  PerpProtocolRepository,
   ProtocolRepository,
   StableCoinRepository,
   YieldPoolRepository,
@@ -68,6 +79,8 @@ export class DatabaseModule {
           DexInfo,
           FeeInfo,
           FeeProtocol,
+          PerpInfo,
+          PerpProtocol,
         ]),
       ],
       providers: [
@@ -79,6 +92,8 @@ export class DatabaseModule {
         DexInfoRepository,
         FeeInfoRepository,
         FeeProtocolRepository,
+        PerpInfoRepository,
+        PerpProtocolRepository,
       ],
       exports: [
         TypeOrmModule,
@@ -90,6 +105,8 @@ export class DatabaseModule {
         DexInfoRepository,
         FeeInfoRepository,
         FeeProtocolRepository,
+        PerpInfoRepository,
+        PerpProtocolRepository,
         // Chain,
         // Protocol,
         // StableCoin,

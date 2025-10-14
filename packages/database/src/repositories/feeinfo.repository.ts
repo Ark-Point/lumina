@@ -19,7 +19,11 @@ export class FeeInfoRepository {
     const repository = !!entityManager ? entityManager.getRepository(FeeInfo) : this.repository;
 
     const existing = await repository.findOne({
-      where: { chain: data.chain },
+      where: {
+        chain: {
+          idx: data?.chain?.idx,
+        },
+      },
     });
 
     if (existing) {

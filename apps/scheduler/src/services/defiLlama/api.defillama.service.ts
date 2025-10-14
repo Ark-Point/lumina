@@ -9,6 +9,10 @@ import {
   FeeInfoRepository,
   FeeProtocol,
   FeeProtocolRepository,
+  PerpInfo,
+  PerpInfoRepository,
+  PerpProtocol,
+  PerpProtocolRepository,
   Protocol,
   ProtocolRepository,
   StableCoin,
@@ -25,6 +29,8 @@ import {
   DexProtocolResponse,
   FeeInfoResponse,
   FeeProtocolResponse,
+  PerpInfoResponse,
+  PerpProtocolResponse,
   ProtocolResponse,
   StableCoinResponse,
   YieldPoolResponse,
@@ -44,6 +50,8 @@ export class ApiDefiLlamaService {
     private readonly dexProtocolRepository: DexProtocolRepository,
     private readonly feeInfoRepository: FeeInfoRepository,
     private readonly feeProtocolRepository: FeeProtocolRepository,
+    private readonly perpInfoRepository: PerpInfoRepository,
+    private readonly perpProtocolRepository: PerpProtocolRepository,
     private readonly dataSource: DataSource,
   ) {
     const baseUrl = 'https://api.llama.fi';
@@ -180,6 +188,48 @@ export class ApiDefiLlamaService {
       await queryRunner.rollbackTransaction();
       this.logger.debug(`[${this.getFeeInfo.name}] DB Transaction rollback. `);
       this.logger.error(`[${this.getFeeInfo.name}]  DB Insert 실패 :\nmessage: ${error}  `);
+    } finally {
+      await queryRunner.release();
+    }
+  }
+
+  public async getPerpInfo(chainName?: string) {
+    const endpoint = `/overview/open-interest`;
+
+    const getPerpInfoResponse = await this.defiLlamaApiInstance.get(endpoint, {
+      params: {
+        excludeTotalDataChart: true,
+        excludeTotalDataChartBreakdown: true,
+      },
+    });
+
+    const perpInfoResponse: PerpInfoResponse = getPerpInfoResponse.data;
+    const perpProtocols = perpInfoResponse.protocols;
+
+    // DB Transaction For Fee DB
+    const queryRunner = await this.dataSource.createQueryRunner();
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
+    this.logger.debug(`[${this.getPerpInfo.name}] DB Transaction 생성.`);
+    try {
+      let chain: Chain = undefined;
+      if (!!chainName) {
+        chain = await this.chainRepository.findByName(perpInfoResponse?.chain);
+      }
+      const perpInfo = await this.savePerpInfo(perpInfoResponse, chain, queryRunner.manager);
+      const perpProtocolInfo = await this.savePerpProtocols(
+        perpProtocols,
+        perpInfo,
+        queryRunner.manager,
+      );
+      this.logger.debug(`Successfully saved ${perpProtocols.length} perpProtocols to database`);
+      await queryRunner.commitTransaction();
+      this.logger.debug(`[${this.getPerpInfo.name}] DB Transaction 커밋. `);
+      return { perpInfo, perpProtocolInfo };
+    } catch (error) {
+      await queryRunner.rollbackTransaction();
+      this.logger.debug(`[${this.getPerpInfo.name}] DB Transaction rollback. `);
+      this.logger.error(`[${this.getPerpInfo.name}]  DB Insert 실패 :\nmessage: ${error}  `);
     } finally {
       await queryRunner.release();
     }
@@ -435,7 +485,6 @@ export class ApiDefiLlamaService {
   /**
    * FeeProtocol 데이터를 가져와서 DB에 저장합니다.
    */
-
   public async saveFeeProtocols(
     feeProtocols: FeeProtocolResponse[],
     feeInfo: FeeInfo,
@@ -482,6 +531,82 @@ export class ApiDefiLlamaService {
     return await this.feeProtocolRepository.saveMany(feeProtocolEntities, entityManager);
   }
 
+  /**
+   * PerpInfo 데이터를 가져와서 DB에 저장합니다.
+   */
+  public async savePerpInfo(
+    perpInfo: PerpInfoResponse,
+    chain: Chain,
+    entityManager?: EntityManager,
+  ) {
+    const perpInfoEntity: PerpInfo = {
+      allChains: perpInfo.allChains,
+      total24h: perpInfo.total24h,
+      total48hto24h: perpInfo.total48hto24h,
+      total7d: perpInfo.total7d,
+      total14dto7d: perpInfo.total14dto7d,
+      total60dto30d: perpInfo.total60dto30d,
+      total30d: perpInfo.total30d,
+      total1y: perpInfo.total1y,
+      totalAllTime: perpInfo.totalAllTime,
+      change_1d: perpInfo.change_1d,
+      change_7d: perpInfo.change_7d,
+      change_1m: perpInfo.change_1m,
+      change_7dover7d: perpInfo.change_7dover7d,
+      change_30dover30d: perpInfo.change_30dover30d,
+      total7DaysAgo: perpInfo.total7DaysAgo,
+      total30DaysAgo: perpInfo.total30DaysAgo,
+      breakdown24h: perpInfo.breakdown24h,
+      breakdown30d: perpInfo.breakdown30d,
+      chain,
+    };
+    return await this.perpInfoRepository.saveOrUpdate(perpInfoEntity, entityManager);
+  }
+
+  /**
+   * PerpProtocol 데이터를 가져와서 DB에 저장합니다.
+   */
+  public async savePerpProtocols(
+    perpProtocols: PerpProtocolResponse[],
+    perpInfo: PerpInfo,
+    entityManager?: EntityManager,
+  ) {
+    const perpProtocolEntities: PerpProtocol[] = perpProtocols.map(
+      (perpProtocol): PerpProtocol => ({
+        perpInfo: perpInfo,
+        defillamaId: perpProtocol.defillamaId,
+        name: perpProtocol.name,
+        displayName: perpProtocol.displayName,
+        module: perpProtocol.module,
+        category: perpProtocol.category,
+        logo: perpProtocol.logo,
+        chains: perpProtocol.chains,
+        protocolType: perpProtocol.protocolType,
+        methodologyURL: perpProtocol.methodologyURL,
+        methodology: perpProtocol.methodology,
+        parentProtocol: perpProtocol.parentProtocol,
+        slug: perpProtocol.slug,
+        linkedProtocols: perpProtocol.linkedProtocols,
+        id: perpProtocol.id,
+        total24h: perpProtocol.total24h,
+        total48hto24h: perpProtocol.total48hto24h,
+        total7d: perpProtocol.total7d,
+        total14dto7d: perpProtocol.total14dto7d,
+        total60dto30d: perpProtocol.total60dto30d,
+        total30d: perpProtocol.total30d,
+        total1y: perpProtocol.total1y,
+        average1y: perpProtocol.average1y,
+        monthlyAverage1y: perpProtocol.monthlyAverage1y,
+        change_30dover30d: perpProtocol.change_30dover30d,
+        total7DaysAgo: perpProtocol.total7DaysAgo,
+        total30DaysAgo: perpProtocol.total30DaysAgo,
+      }),
+    );
+
+    // Repository의 saveMany 메서드 사용
+    return await this.perpProtocolRepository.saveMany(perpProtocolEntities, entityManager);
+  }
+
   // call by scheduler
   public async queryDefiLlamaApiForBaseMainnet() {
     const chains = await this.getAllChains();
@@ -514,5 +639,7 @@ export class ApiDefiLlamaService {
     await this.getDexInfo(baseMainnet.name);
 
     await this.getFeeInfo(baseMainnet.name);
+
+    await this.getPerpInfo();
   }
 }
