@@ -28,13 +28,13 @@ paths:
           required: false
           schema:
             type: integer
-          description: Starting position (default: 1)
+          description: Starting position (default 1)
         - name: limit
           in: query
           required: false
           schema:
             type: integer
-          description: Result limit (default: 100, max: 5000)
+          description: Result limit (default 100, max 5000)
         - name: convert
           in: query
           required: false
