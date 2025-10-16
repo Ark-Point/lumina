@@ -135,7 +135,7 @@ paths:
           required: false
           schema:
             type: integer
-          description: Starting position (default: 1)
+          description: Starting position (default 1)
         - name: limit
           in: query
           required: false
