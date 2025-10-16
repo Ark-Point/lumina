@@ -92,7 +92,7 @@ paths:
                     type: object
                   data:
                     type: object
-
+                    
   /v1/cryptocurrency/info:
     get:
       operationId: getCryptoInfo
