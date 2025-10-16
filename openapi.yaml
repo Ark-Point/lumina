@@ -5,7 +5,7 @@ info:
     CoinMarketCap의 가상자산 데이터 API입니다. 이 스펙은 현재 가격, 메타데이터, 거래소 정보 등 주요 정보를 조회하기 위한 엔드포인트를 포함합니다.
   version: 1.0.0
 servers:
-  - url: https://pro-api.coinmarketcap.com
+  - url: https://pro-api.coinmarketcap.com/
     description: CoinMarketCap 프로덕션 서버
 components:
   securitySchemes:
