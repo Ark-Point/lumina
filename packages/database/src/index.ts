@@ -2,27 +2,29 @@ import '@lumina-backend/config';
 import { DynamicModule, Global, Module } from '@nestjs/common';
 import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
 import {
-  Chain,
-  DexInfo,
-  DexProtocol,
-  PerpInfo,
-  PerpProtocol,
-  Protocol,
-  StableCoin,
-  YieldPool,
+    Chain,
+    DexInfo,
+    DexProtocol,
+    PerpInfo,
+    PerpProtocol,
+    Protocol,
+    StableCoin,
+    YieldPool,
 } from './entities';
+import { CMCCryptoCurrency } from './entities/cmc-cryptocurrency.entity';
 import { FeeInfo } from './entities/feeinfo.entity';
 import { FeeProtocol } from './entities/feeprotocol.entity';
 import {
-  ChainRepository,
-  DexInfoRepository,
-  DexProtocolRepository,
-  PerpInfoRepository,
-  PerpProtocolRepository,
-  ProtocolRepository,
-  StableCoinRepository,
-  YieldPoolRepository,
+    ChainRepository,
+    DexInfoRepository,
+    DexProtocolRepository,
+    PerpInfoRepository,
+    PerpProtocolRepository,
+    ProtocolRepository,
+    StableCoinRepository,
+    YieldPoolRepository,
 } from './repositories';
+import { CMCCryptoCurrencyRepository } from './repositories/cmc-cryptocurrency.repository';
 import { FeeInfoRepository } from './repositories/feeinfo.repository';
 import { FeeProtocolRepository } from './repositories/feeprotocol.repository';
 
@@ -81,6 +83,7 @@ export class DatabaseModule {
           FeeProtocol,
           PerpInfo,
           PerpProtocol,
+          CMCCryptoCurrency,
         ]),
       ],
       providers: [
@@ -94,6 +97,7 @@ export class DatabaseModule {
         FeeProtocolRepository,
         PerpInfoRepository,
         PerpProtocolRepository,
+        CMCCryptoCurrencyRepository,
       ],
       exports: [
         TypeOrmModule,
@@ -107,6 +111,7 @@ export class DatabaseModule {
         FeeProtocolRepository,
         PerpInfoRepository,
         PerpProtocolRepository,
+        CMCCryptoCurrencyRepository,
         // Chain,
         // Protocol,
         // StableCoin,
