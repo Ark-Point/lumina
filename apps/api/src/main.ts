@@ -1,4 +1,4 @@
-import '@lumina-backend/config';
+import '@lumina/config';
 import { ValidationPipe } from '@nestjs/common';
 import { CorsOptions } from '@nestjs/common/interfaces/external/cors-options.interface';
 import { ConfigService } from '@nestjs/config';

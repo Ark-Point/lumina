@@ -1,4 +1,4 @@
-import '@lumina-backend/config';
+import '@lumina/config';
 import { DynamicModule, Global, Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import Redis, { RedisOptions } from 'ioredis';

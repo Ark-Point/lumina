@@ -6,7 +6,7 @@
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "paths": {
-      "@lumina-backend/config": ["packages/config/index.ts"],
+      "@lumina/config": ["packages/config/index.ts"],
       "@lumina-backend/redis": ["packages/redis/src/index.ts"],
       "@lumina-backend/database": ["packages/database/src/index.ts"]
     }

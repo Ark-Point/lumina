@@ -1,4 +1,4 @@
-import '@lumina-backend/config';
+import '@lumina/config';
 import { DynamicModule } from '@nestjs/common';
 import { TypeOrmModuleOptions } from '@nestjs/typeorm';
 export type DatabaseModuleOptions = Partial<TypeOrmModuleOptions>;

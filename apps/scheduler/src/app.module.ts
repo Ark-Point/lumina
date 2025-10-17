@@ -1,5 +1,5 @@
-import '@lumina-backend/config';
 import { DatabaseModule } from '@lumina-backend/database';
+import '@lumina/config';
 import { Module } from '@nestjs/common';
 import { ScheduleModule } from '@nestjs/schedule';
 import { CMCModule } from './services/cmc/cmc.module';
