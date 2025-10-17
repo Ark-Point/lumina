@@ -1,6 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { Cron } from '@nestjs/schedule';
-import { ApiDefiLlamaService } from '../defiLlama/api.defillama.service';
+import { ApiDefiLlamaService } from '../../defiLlama/api.defillama.service';
 
 @Injectable()
 export class DefiLlamaApiSchedulerJob {

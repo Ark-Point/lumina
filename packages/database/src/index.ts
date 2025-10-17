@@ -1,15 +1,32 @@
 import '@lumina/config';
 import { DynamicModule, Global, Module } from '@nestjs/common';
 import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
-import { Chain, DexInfo, DexProtocol, Protocol, StableCoin, YieldPool } from './entities';
 import {
-    ChainRepository,
-    DexInfoRepository,
-    DexProtocolRepository,
-    ProtocolRepository,
-    StableCoinRepository,
-    YieldPoolRepository,
+  Chain,
+  DexInfo,
+  DexProtocol,
+  PerpInfo,
+  PerpProtocol,
+  Protocol,
+  StableCoin,
+  YieldPool,
+} from './entities';
+import { CMCCryptoCurrency } from './entities/cmc-cryptocurrency.entity';
+import { FeeInfo } from './entities/feeinfo.entity';
+import { FeeProtocol } from './entities/feeprotocol.entity';
+import {
+  ChainRepository,
+  DexInfoRepository,
+  DexProtocolRepository,
+  PerpInfoRepository,
+  PerpProtocolRepository,
+  ProtocolRepository,
+  StableCoinRepository,
+  YieldPoolRepository,
 } from './repositories';
+import { CMCCryptoCurrencyRepository } from './repositories/cmc-cryptocurrency.repository';
+import { FeeInfoRepository } from './repositories/feeinfo.repository';
+import { FeeProtocolRepository } from './repositories/feeprotocol.repository';
 
 // Export entities
 export * from './entities';
@@ -55,7 +72,19 @@ export class DatabaseModule {
     return {
       module: DatabaseModule,
       imports: [
-        TypeOrmModule.forFeature([Chain, Protocol, StableCoin, YieldPool, DexProtocol, DexInfo]),
+        TypeOrmModule.forFeature([
+          Chain,
+          Protocol,
+          StableCoin,
+          YieldPool,
+          DexProtocol,
+          DexInfo,
+          FeeInfo,
+          FeeProtocol,
+          PerpInfo,
+          PerpProtocol,
+          CMCCryptoCurrency,
+        ]),
       ],
       providers: [
         ChainRepository,
@@ -64,6 +93,11 @@ export class DatabaseModule {
         YieldPoolRepository,
         DexProtocolRepository,
         DexInfoRepository,
+        FeeInfoRepository,
+        FeeProtocolRepository,
+        PerpInfoRepository,
+        PerpProtocolRepository,
+        CMCCryptoCurrencyRepository,
       ],
       exports: [
         TypeOrmModule,
@@ -73,6 +107,11 @@ export class DatabaseModule {
         YieldPoolRepository,
         DexProtocolRepository,
         DexInfoRepository,
+        FeeInfoRepository,
+        FeeProtocolRepository,
+        PerpInfoRepository,
+        PerpProtocolRepository,
+        CMCCryptoCurrencyRepository,
         // Chain,
         // Protocol,
         // StableCoin,

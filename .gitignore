@@ -31,6 +31,7 @@ build/
 .cache/
 .tmp/
 tmp/
+.next/
 out/
 
 # --- Monorepo packages ---

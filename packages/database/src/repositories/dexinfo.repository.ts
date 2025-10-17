@@ -19,7 +19,7 @@ export class DexInfoRepository {
     const repository = !!entityManager ? entityManager.getRepository(DexInfo) : this.repository;
 
     const existing = await repository.findOne({
-      where: { chain: data.chain },
+      where: { chain: { idx: data.chain.idx } },
     });
 
     if (existing) {
