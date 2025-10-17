@@ -1,14 +1,14 @@
-import '@lumina-backend/config';
+import '@lumina/config';
 import { DynamicModule, Global, Module } from '@nestjs/common';
 import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { Chain, DexInfo, DexProtocol, Protocol, StableCoin, YieldPool } from './entities';
 import {
-  ChainRepository,
-  DexInfoRepository,
-  DexProtocolRepository,
-  ProtocolRepository,
-  StableCoinRepository,
-  YieldPoolRepository,
+    ChainRepository,
+    DexInfoRepository,
+    DexProtocolRepository,
+    ProtocolRepository,
+    StableCoinRepository,
+    YieldPoolRepository,
 } from './repositories';
 
 // Export entities

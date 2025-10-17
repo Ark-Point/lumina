@@ -24,7 +24,7 @@ exports.RedisModule = exports.REDIS_CLIENT = void 0;
 const common_1 = require('@nestjs/common');
 const config_1 = require('@nestjs/config');
 const ioredis_1 = require('ioredis');
-require('@lumina-backend/config');
+require('@lumina/config');
 exports.REDIS_CLIENT = Symbol('REDIS_CLIENT');
 let RedisModule = (RedisModule_1 = class RedisModule {
   static forRoot(options) {

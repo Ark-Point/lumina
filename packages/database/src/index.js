@@ -23,7 +23,7 @@ Object.defineProperty(exports, '__esModule', { value: true });
 exports.DatabaseModule = void 0;
 const common_1 = require('@nestjs/common');
 const typeorm_1 = require('@nestjs/typeorm');
-require('@lumina-backend/config');
+require('@lumina/config');
 let DatabaseModule = (DatabaseModule_1 = class DatabaseModule {
   static forRoot(options) {
     const type = process.env.DATABASE_TYPE || 'postgres';
