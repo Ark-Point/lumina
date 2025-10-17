@@ -1,4 +1,4 @@
-## Lumina Backend (Turbo Monorepo)
+## Lumina (Turbo Monorepo)
 
 ### Monorepo Structure & Responsibilities
 
